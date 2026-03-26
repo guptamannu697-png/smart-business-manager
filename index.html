@@ -1,0 +1,512 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+:root{
+  --bg:#0e0c1a;--bg2:#13112B;--bg3:#1a1735;--bg4:#211e3f;
+  --acc:#7c5cfc;--acc2:#9f7fff;--acc-g:rgba(124,92,252,0.18);
+  --grn:#2dd4a0;--red:#f4556d;--blu:#4da6ff;--org:#ff9f43;--cyn:#00d2d3;--pur:#a29bfe;
+  --t1:#f0eeff;--t2:#9d94c8;--t3:#5e567a;
+  --brd:rgba(130,100,255,0.15);--brdh:rgba(130,100,255,0.35);
+  --r:10px;--rs:7px;
+}
+.app{display:flex;height:600px;background:var(--bg);border-radius:14px;overflow:hidden;border:1px solid var(--brd)}
+.sidebar{width:210px;min-width:210px;background:var(--bg2);border-right:1px solid var(--brd);display:flex;flex-direction:column;padding:16px 0}
+.brand{display:flex;align-items:center;gap:8px;padding:0 16px 16px;border-bottom:1px solid var(--brd);margin-bottom:12px}
+.brand-icon{width:28px;height:28px;background:var(--acc);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff}
+.brand-name{font-size:13px;font-weight:700;color:var(--t1);letter-spacing:.02em}
+.brand-name em{font-style:normal;color:var(--acc2)}
+.nav-sect{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);padding:10px 16px 4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 14px;margin:1px 8px;border-radius:var(--rs);cursor:pointer;color:var(--t2);font-size:12px;font-weight:500;transition:all .18s}
+.nav-item:hover{background:var(--bg3);color:var(--t1)}
+.nav-item.active{background:var(--acc-g);color:var(--acc2);border:1px solid var(--brd)}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--acc);flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:99px}
+.sidebar-bottom{margin-top:auto;padding:12px 10px 0;border-top:1px solid var(--brd);display:flex;flex-direction:column;gap:6px}
+.btn-sm-side{padding:7px 12px;border-radius:var(--rs);background:transparent;border:1px solid var(--brd);color:var(--t2);font-size:11px;cursor:pointer;text-align:center;font-family:var(--font-sans)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:50px;background:var(--bg2);border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:12px;padding:0 18px;flex-shrink:0}
+.topbar-title{font-size:14px;font-weight:700;color:var(--t1);flex:1}
+.search-box{background:var(--bg3);border:1px solid var(--brd);border-radius:99px;padding:5px 14px;font-size:11px;color:var(--t2);width:160px;font-family:var(--font-sans)}
+.notif{width:28px;height:28px;background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rs);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
+.nb{position:absolute;top:-3px;right:-3px;width:13px;height:13px;background:var(--red);border-radius:50%;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center}
+.avatar{width:28px;height:28px;background:var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.content{flex:1;overflow-y:auto;padding:18px;background:var(--bg)}
+.page-head{margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.page-title{font-size:18px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:8px}
+.live-badge{font-size:9px;font-weight:700;background:var(--grn);color:#0d0d14;padding:2px 7px;border-radius:99px}
+.page-date{font-size:11px;color:var(--t3)}
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px}
+.kpi{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);padding:13px 14px;position:relative;overflow:hidden;cursor:default}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;border-radius:var(--r) var(--r) 0 0}
+.kpi-label{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:6px}
+.kpi-val{font-size:17px;font-weight:800;color:var(--t1);margin-bottom:3px}
+.kpi-sub{font-size:9px;color:var(--t2)}
+.kpi.g::before{background:var(--grn)} .kpi.r::before{background:var(--red)} .kpi.b::before{background:var(--blu)} .kpi.o::before{background:var(--org)} .kpi.p::before{background:var(--pur)} .kpi.c::before{background:var(--cyn)}
+.charts-row{display:grid;grid-template-columns:1.7fr 1fr;gap:12px;margin-bottom:14px}
+.chart-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);padding:14px 16px}
+.chart-title{font-size:11px;font-weight:700;color:var(--t2);margin-bottom:12px;letter-spacing:.03em}
+.bar-chart{display:flex;align-items:flex-end;gap:5px;height:100px}
+.bar-grp{display:flex;gap:2px;align-items:flex-end;flex:1}
+.bar{flex:1;border-radius:3px 3px 0 0;min-height:4px}
+.bar.rev{background:var(--grn);opacity:.8}
+.bar.exp{background:var(--red);opacity:.8}
+.chart-legend{display:flex;gap:12px;margin-top:8px}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t2)}
+.leg-dot{width:8px;height:8px;border-radius:2px}
+.x-labels{display:flex;gap:5px;padding-top:4px}
+.x-lbl{flex:1;text-align:center;font-size:9px;color:var(--t3)}
+.donut-wrap{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;height:130px}
+.donut-svg{width:100px;height:100px}
+.donut-legend{display:flex;flex-direction:column;gap:4px;font-size:10px;color:var(--t2)}
+.donut-row{display:flex;align-items:center;gap:5px}
+.donut-clr{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.bottom-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);padding:14px 16px}
+.card-hdr{font-size:11px;font-weight:700;color:var(--t2);border-bottom:1px solid var(--brd);padding-bottom:8px;margin-bottom:10px;letter-spacing:.03em}
+.mini-table{width:100%;border-collapse:collapse;font-size:11px}
+.mini-table th{color:var(--t3);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:4px 8px;text-align:left}
+.mini-table td{padding:7px 8px;color:var(--t2);border-bottom:1px solid rgba(130,100,255,0.06)}
+.mini-table tr:last-child td{border-bottom:none}
+.mini-table tr:hover td{background:var(--bg3)}
+.badge{display:inline-block;padding:2px 7px;border-radius:99px;font-size:9px;font-weight:700;text-transform:uppercase}
+.bi{background:rgba(45,212,160,.15);color:var(--grn)}
+.be{background:rgba(244,85,109,.15);color:var(--red)}
+.bl{background:rgba(255,159,67,.15);color:var(--org)}
+.bk{background:rgba(77,166,255,.15);color:var(--blu)}
+.section{display:none}.section.active{display:block}
+.tab-nav{display:flex;gap:4px;margin-bottom:16px}
+.tab{padding:6px 14px;border-radius:var(--rs);font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--brd);background:transparent;color:var(--t2);font-family:var(--font-sans);transition:all .15s}
+.tab.on{background:var(--acc-g);color:var(--acc2);border-color:var(--brdh)}
+.form-row{display:grid;gap:10px;margin-bottom:14px}
+.form-row.cols2{grid-template-columns:1fr 1fr}
+.form-row.cols3{grid-template-columns:1fr 1fr 1fr}
+.field label{display:block;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:4px}
+.field input,.field select{width:100%;background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rs);padding:7px 10px;color:var(--t1);font-size:11px;font-family:var(--font-sans)}
+.btn-prim{background:var(--acc);color:#fff;border:none;border-radius:var(--rs);padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-sans)}
+.btn-sec{background:var(--bg3);color:var(--t1);border:1px solid var(--brd);border-radius:var(--rs);padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-sans)}
+.btn-grn{background:var(--grn);color:#0d0d14;border:none;border-radius:var(--rs);padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font-sans)}
+.sum-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.sum-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);padding:12px 14px;text-align:center}
+.sum-lbl{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.sum-val{font-size:18px;font-weight:800}
+.inv-layout{display:grid;grid-template-columns:1.3fr 1fr;gap:12px}
+.inv-item{display:grid;grid-template-columns:2fr 60px 80px 24px;gap:6px;align-items:center;margin-bottom:6px}
+.inv-item input{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rs);padding:5px 8px;color:var(--t1);font-size:11px;font-family:var(--font-sans);width:100%}
+.del-btn{width:24px;height:28px;background:none;border:1px solid var(--brd);border-radius:var(--rs);color:var(--red);cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans)}
+.inv-totals{border-top:1px solid var(--brd);padding-top:10px;margin-top:8px}
+.tot-row{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);padding:3px 0}
+.tot-grand{font-size:14px;font-weight:800;color:var(--t1);border-top:1px solid var(--brd);padding-top:8px;margin-top:4px;display:flex;justify-content:space-between}
+.inv-chip{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rs);padding:9px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.inv-chip:hover{border-color:var(--acc)}
+.ic-num{font-size:12px;font-weight:700;color:var(--t1)}
+.ic-cust{font-size:10px;color:var(--t3)}
+.ic-amt{font-size:12px;font-weight:700;color:var(--grn)}
+.emp-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.emp-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);padding:14px;text-align:center}
+.emp-av{width:40px;height:40px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff}
+.emp-name{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.emp-role{font-size:10px;color:var(--t2);margin-bottom:6px}
+.emp-sal{font-size:13px;font-weight:700;color:var(--grn)}
+.att-row{display:flex;gap:3px;justify-content:center;margin-top:6px}
+.att-dot{width:10px;height:10px;border-radius:50%}
+.prog-bar{height:4px;background:var(--bg3);border-radius:99px;margin-top:6px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px}
+.rpt-btns{display:flex;gap:8px;margin-bottom:16px}
+.scroll-y{overflow-y:auto;scrollbar-width:thin}
+</style>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">⬡</div>
+      <div class="brand-name">BizManager<em>Pro</em></div>
+    </div>
+    <div class="nav-sect">Main</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)"><div class="nav-dot"></div>Dashboard</div>
+    <div class="nav-item" onclick="showPage('finance',this)"><div class="nav-dot"></div>Finance</div>
+    <div class="nav-item" onclick="showPage('inventory',this)"><div class="nav-dot"></div>Inventory<span class="nav-badge">3</span></div>
+    <div class="nav-item" onclick="showPage('invoice',this)"><div class="nav-dot"></div>Invoices</div>
+    <div class="nav-sect">People</div>
+    <div class="nav-item" onclick="showPage('employees',this)"><div class="nav-dot"></div>Employees</div>
+    <div class="nav-sect">Tools</div>
+    <div class="nav-item" onclick="showPage('reports',this)"><div class="nav-dot"></div>Reports</div>
+    <div class="sidebar-bottom">
+      <div class="btn-sm-side">☀ / ☾ Theme</div>
+      <div class="btn-sm-side">⏻ Logout</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-title" id="pageTitle">Dashboard</div>
+      <input class="search-box" placeholder="Search anything…" />
+      <div class="notif"><span style="font-size:13px">🔔</span><div class="nb">3</div></div>
+      <div class="avatar">A</div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content scroll-y">
+
+      <!-- DASHBOARD -->
+      <div id="p-dashboard" class="section active">
+        <div class="page-head">
+          <div class="page-title">Dashboard <span class="live-badge">LIVE</span></div>
+          <div class="page-date">Thursday, 26 March 2026</div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi g"><div class="kpi-label">Revenue</div><div class="kpi-val" style="color:var(--grn)">₹12.4L</div><div class="kpi-sub">↑ 8% vs last month</div></div>
+          <div class="kpi r"><div class="kpi-label">Expenses</div><div class="kpi-val" style="color:var(--red)">₹7.1L</div><div class="kpi-sub">148 entries</div></div>
+          <div class="kpi b"><div class="kpi-label">Net Profit</div><div class="kpi-val" style="color:var(--blu)">₹5.3L</div><div class="kpi-sub" style="color:var(--grn)">▲ Profitable</div></div>
+          <div class="kpi o"><div class="kpi-label">Low Stock</div><div class="kpi-val" style="color:var(--org)">3</div><div class="kpi-sub">Need restocking</div></div>
+          <div class="kpi p"><div class="kpi-label">Employees</div><div class="kpi-val" style="color:var(--pur)">5</div><div class="kpi-sub">Active staff</div></div>
+          <div class="kpi c"><div class="kpi-label">Invoices</div><div class="kpi-val" style="color:var(--cyn)">18</div><div class="kpi-sub">This month</div></div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-title">MONTHLY REVENUE VS EXPENSES</div>
+            <div class="bar-chart">
+              <div class="bar-grp"><div class="bar rev" style="height:52px"></div><div class="bar exp" style="height:38px"></div></div>
+              <div class="bar-grp"><div class="bar rev" style="height:60px"></div><div class="bar exp" style="height:44px"></div></div>
+              <div class="bar-grp"><div class="bar rev" style="height:46px"></div><div class="bar exp" style="height:36px"></div></div>
+              <div class="bar-grp"><div class="bar rev" style="height:75px"></div><div class="bar exp" style="height:52px"></div></div>
+              <div class="bar-grp"><div class="bar rev" style="height:68px"></div><div class="bar exp" style="height:48px"></div></div>
+              <div class="bar-grp"><div class="bar rev" style="height:88px"></div><div class="bar exp" style="height:62px"></div></div>
+            </div>
+            <div class="x-labels">
+              <span class="x-lbl">Oct</span><span class="x-lbl">Nov</span><span class="x-lbl">Dec</span><span class="x-lbl">Jan</span><span class="x-lbl">Feb</span><span class="x-lbl">Mar</span>
+            </div>
+            <div class="chart-legend">
+              <div class="leg-item"><div class="leg-dot" style="background:var(--grn)"></div>Revenue</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>Expenses</div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">EXPENSE CATEGORIES</div>
+            <div class="donut-wrap">
+              <svg class="donut-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--bg3)" stroke-width="18"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--acc)" stroke-width="18" stroke-dasharray="56 183" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--grn)" stroke-width="18" stroke-dasharray="40 183" stroke-dashoffset="-56" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--red)" stroke-width="18" stroke-dasharray="32 183" stroke-dashoffset="-96" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--org)" stroke-width="18" stroke-dasharray="28 183" stroke-dashoffset="-128" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--blu)" stroke-width="18" stroke-dasharray="27 183" stroke-dashoffset="-156" transform="rotate(-90 50 50)"/>
+              </svg>
+              <div class="donut-legend">
+                <div class="donut-row"><div class="donut-clr" style="background:var(--acc)"></div>Salaries 31%</div>
+                <div class="donut-row"><div class="donut-clr" style="background:var(--grn)"></div>Rent 22%</div>
+                <div class="donut-row"><div class="donut-clr" style="background:var(--red)"></div>Marketing 17%</div>
+                <div class="donut-row"><div class="donut-clr" style="background:var(--org)"></div>Supplies 15%</div>
+                <div class="donut-row"><div class="donut-clr" style="background:var(--blu)"></div>Utilities 15%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-card">
+          <div class="card-hdr">RECENT TRANSACTIONS</div>
+          <table class="mini-table">
+            <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th></tr></thead>
+            <tbody>
+              <tr><td>25 Mar</td><td>Product Sales – Batch 7</td><td>Sales</td><td><span class="badge bi">Income</span></td><td style="color:var(--grn)">₹1,85,000</td></tr>
+              <tr><td>24 Mar</td><td>Office Rent – March</td><td>Rent</td><td><span class="badge be">Expense</span></td><td style="color:var(--red)">₹48,000</td></tr>
+              <tr><td>23 Mar</td><td>Consulting Fee – TCS</td><td>Service</td><td><span class="badge bi">Income</span></td><td style="color:var(--grn)">₹95,000</td></tr>
+              <tr><td>22 Mar</td><td>Marketing Campaign</td><td>Marketing</td><td><span class="badge be">Expense</span></td><td style="color:var(--red)">₹32,000</td></tr>
+              <tr><td>21 Mar</td><td>Software License Sale</td><td>Sales</td><td><span class="badge bi">Income</span></td><td style="color:var(--grn)">₹72,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FINANCE -->
+      <div id="p-finance" class="section">
+        <div class="page-head"><div class="page-title">Finance Tracker</div></div>
+        <div class="bottom-card" style="margin-bottom:12px">
+          <div class="card-hdr">ADD TRANSACTION</div>
+          <div class="form-row cols3">
+            <div class="field"><label>Type</label><select><option>Income</option><option>Expense</option></select></div>
+            <div class="field"><label>Category</label><select><option>Sales</option><option>Rent</option><option>Salaries</option><option>Marketing</option><option>Utilities</option></select></div>
+            <div class="field"><label>Description</label><input placeholder="Enter description…"/></div>
+          </div>
+          <div class="form-row cols3">
+            <div class="field"><label>Amount (₹)</label><input type="number" placeholder="0.00"/></div>
+            <div class="field"><label>Date</label><input type="date" value="2026-03-26"/></div>
+            <div class="field" style="display:flex;align-items:flex-end"><button class="btn-prim">+ Add Entry</button></div>
+          </div>
+        </div>
+        <div class="sum-row">
+          <div class="sum-card"><div class="sum-lbl">Total Income</div><div class="sum-val" style="color:var(--grn)">₹12,40,000</div></div>
+          <div class="sum-card"><div class="sum-lbl">Total Expenses</div><div class="sum-val" style="color:var(--red)">₹7,10,000</div></div>
+          <div class="sum-card"><div class="sum-lbl">Balance</div><div class="sum-val" style="color:var(--blu)">₹5,30,000</div></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <input style="flex:1;background:var(--bg2);border:1px solid var(--brd);border-radius:var(--rs);padding:6px 10px;color:var(--t1);font-size:11px;font-family:var(--font-sans)" placeholder="Search transactions…"/>
+          <select style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--rs);padding:6px 10px;color:var(--t2);font-size:11px;font-family:var(--font-sans)"><option>All Types</option><option>Income</option><option>Expense</option></select>
+        </div>
+        <div class="bottom-card">
+          <table class="mini-table">
+            <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td>25 Mar</td><td>Product Sales – Batch 7</td><td>Sales</td><td><span class="badge bi">Income</span></td><td style="color:var(--grn)">₹1,85,000</td><td><button class="btn-sec" style="padding:3px 8px;font-size:10px;margin-right:4px">Edit</button><button class="btn-sec" style="padding:3px 8px;font-size:10px;color:var(--red);border-color:var(--red)">Del</button></td></tr>
+              <tr><td>24 Mar</td><td>Office Rent</td><td>Rent</td><td><span class="badge be">Expense</span></td><td style="color:var(--red)">₹48,000</td><td><button class="btn-sec" style="padding:3px 8px;font-size:10px;margin-right:4px">Edit</button><button class="btn-sec" style="padding:3px 8px;font-size:10px;color:var(--red);border-color:var(--red)">Del</button></td></tr>
+              <tr><td>23 Mar</td><td>Consulting Fee</td><td>Service</td><td><span class="badge bi">Income</span></td><td style="color:var(--grn)">₹95,000</td><td><button class="btn-sec" style="padding:3px 8px;font-size:10px;margin-right:4px">Edit</button><button class="btn-sec" style="padding:3px 8px;font-size:10px;color:var(--red);border-color:var(--red)">Del</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- INVENTORY -->
+      <div id="p-inventory" class="section">
+        <div class="page-head"><div class="page-title">Inventory</div></div>
+        <div class="bottom-card" style="margin-bottom:12px">
+          <div class="card-hdr">ADD PRODUCT</div>
+          <div class="form-row cols3">
+            <div class="field"><label>Product Name</label><input placeholder="Enter product name…"/></div>
+            <div class="field"><label>SKU</label><input placeholder="SKU-001"/></div>
+            <div class="field"><label>Category</label><input placeholder="e.g. Electronics"/></div>
+          </div>
+          <div class="form-row cols3">
+            <div class="field"><label>Quantity</label><input type="number" placeholder="0"/></div>
+            <div class="field"><label>Unit Price (₹)</label><input type="number" placeholder="0.00"/></div>
+            <div class="field" style="display:flex;align-items:flex-end"><button class="btn-prim">+ Add Product</button></div>
+          </div>
+        </div>
+        <div class="bottom-card">
+          <table class="mini-table">
+            <thead><tr><th>SKU</th><th>Product</th><th>Category</th><th>Qty</th><th>Price</th><th>Value</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td>SKU-001</td><td><strong style="color:var(--t1)">Laptop Pro 15"</strong></td><td>Electronics</td><td>24</td><td>₹75,000</td><td>₹18,00,000</td><td><span class="badge bk">In Stock</span></td><td><button class="btn-sec" style="padding:3px 8px;font-size:10px">Edit</button></td></tr>
+              <tr style="background:rgba(255,159,67,.04)"><td>SKU-002</td><td><strong style="color:var(--t1)">Wireless Mouse</strong></td><td>Electronics</td><td style="color:var(--org)"><strong>3</strong></td><td>₹1,500</td><td>₹4,500</td><td><span class="badge bl">Low Stock</span></td><td><button class="btn-sec" style="padding:3px 8px;font-size:10px">Edit</button></td></tr>
+              <tr><td>SKU-003</td><td><strong style="color:var(--t1)">Office Chair</strong></td><td>Furniture</td><td>12</td><td>₹12,000</td><td>₹1,44,000</td><td><span class="badge bk">In Stock</span></td><td><button class="btn-sec" style="padding:3px 8px;font-size:10px">Edit</button></td></tr>
+              <tr style="background:rgba(255,159,67,.04)"><td>SKU-004</td><td><strong style="color:var(--t1)">Standing Desk</strong></td><td>Furniture</td><td style="color:var(--org)"><strong>2</strong></td><td>₹28,000</td><td>₹56,000</td><td><span class="badge bl">Low Stock</span></td><td><button class="btn-sec" style="padding:3px 8px;font-size:10px">Edit</button></td></tr>
+              <tr><td>SKU-005</td><td><strong style="color:var(--t1)">A4 Paper Ream</strong></td><td>Supplies</td><td>80</td><td>₹350</td><td>₹28,000</td><td><span class="badge bk">In Stock</span></td><td><button class="btn-sec" style="padding:3px 8px;font-size:10px">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- INVOICE -->
+      <div id="p-invoice" class="section">
+        <div class="page-head"><div class="page-title">Invoice Generator</div></div>
+        <div class="inv-layout">
+          <div>
+            <div class="bottom-card" style="margin-bottom:12px">
+              <div class="card-hdr">INVOICE DETAILS</div>
+              <div class="form-row cols2">
+                <div class="field"><label>Invoice #</label><input value="INV-1006" readonly/></div>
+                <div class="field"><label>Date</label><input type="date" value="2026-03-26"/></div>
+                <div class="field"><label>Customer Name</label><input placeholder="Customer name…"/></div>
+                <div class="field"><label>Email</label><input placeholder="email@example.com"/></div>
+              </div>
+              <div class="field"><label>Address</label><input placeholder="Customer address…" style="width:100%;background:var(--bg3);border:1px solid var(--brd);border-radius:var(--rs);padding:7px 10px;color:var(--t1);font-size:11px;font-family:var(--font-sans)"/></div>
+            </div>
+            <div class="bottom-card">
+              <div class="card-hdr">LINE ITEMS</div>
+              <div class="inv-item">
+                <input placeholder="Description…" value="Consulting Services"/>
+                <input type="number" value="10"/>
+                <input type="number" value="5000"/>
+                <button class="del-btn">✕</button>
+              </div>
+              <div class="inv-item">
+                <input placeholder="Description…" value="Software License"/>
+                <input type="number" value="2"/>
+                <input type="number" value="15000"/>
+                <button class="del-btn">✕</button>
+              </div>
+              <button class="btn-sec" style="font-size:11px;margin-bottom:10px">+ Add Item</button>
+              <div class="inv-totals">
+                <div class="tot-row"><span>Subtotal</span><span>₹80,000</span></div>
+                <div class="tot-row"><span>Tax (18%)</span><span>₹14,400</span></div>
+                <div class="tot-grand"><span>TOTAL</span><span style="color:var(--grn)">₹94,400</span></div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:12px">
+                <button class="btn-prim">Save Invoice</button>
+                <button class="btn-grn">⬇ PDF</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="bottom-card">
+              <div class="card-hdr">SAVED INVOICES</div>
+              <div class="inv-chip"><div><div class="ic-num">INV-1001</div><div class="ic-cust">Infosys Ltd · 1 Mar</div></div><div style="text-align:right"><div class="ic-amt">₹94,400</div><button class="btn-grn" style="margin-top:4px;padding:3px 8px;font-size:10px">PDF</button></div></div>
+              <div class="inv-chip"><div><div class="ic-num">INV-1002</div><div class="ic-cust">TCS Corp · 5 Mar</div></div><div style="text-align:right"><div class="ic-amt">₹1,18,000</div><button class="btn-grn" style="margin-top:4px;padding:3px 8px;font-size:10px">PDF</button></div></div>
+              <div class="inv-chip"><div><div class="ic-num">INV-1003</div><div class="ic-cust">Wipro Digital · 10 Mar</div></div><div style="text-align:right"><div class="ic-amt">₹78,500</div><button class="btn-grn" style="margin-top:4px;padding:3px 8px;font-size:10px">PDF</button></div></div>
+              <div class="inv-chip"><div><div class="ic-num">INV-1004</div><div class="ic-cust">HCL Tech · 15 Mar</div></div><div style="text-align:right"><div class="ic-amt">₹2,25,000</div><button class="btn-grn" style="margin-top:4px;padding:3px 8px;font-size:10px">PDF</button></div></div>
+              <div class="inv-chip"><div><div class="ic-num">INV-1005</div><div class="ic-cust">Reliance · 20 Mar</div></div><div style="text-align:right"><div class="ic-amt">₹1,42,000</div><button class="btn-grn" style="margin-top:4px;padding:3px 8px;font-size:10px">PDF</button></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMPLOYEES -->
+      <div id="p-employees" class="section">
+        <div class="page-head"><div class="page-title">Employees</div></div>
+        <div class="emp-row">
+          <div class="emp-card">
+            <div class="emp-av" style="background:#7c5cfc">PS</div>
+            <div class="emp-name">Priya Sharma</div>
+            <div class="emp-role">Sales Manager</div>
+            <div class="emp-sal">₹75,000/mo</div>
+            <div class="att-row">
+              <div class="att-dot" style="background:var(--grn)" title="Present"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--red)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--org)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+            </div>
+            <div class="prog-bar"><div class="prog-fill" style="width:86%;background:var(--grn)"></div></div>
+            <div style="font-size:9px;color:var(--t3);margin-top:4px">18/21 days · Payable ₹64,286</div>
+          </div>
+          <div class="emp-card">
+            <div class="emp-av" style="background:#4da6ff">RM</div>
+            <div class="emp-name">Rahul Mehta</div>
+            <div class="emp-role">Backend Developer</div>
+            <div class="emp-sal">₹90,000/mo</div>
+            <div class="att-row">
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--org)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--red)"></div>
+            </div>
+            <div class="prog-bar"><div class="prog-fill" style="width:90%;background:var(--blu)"></div></div>
+            <div style="font-size:9px;color:var(--t3);margin-top:4px">19/21 days · Payable ₹81,429</div>
+          </div>
+          <div class="emp-card">
+            <div class="emp-av" style="background:#2dd4a0">AD</div>
+            <div class="emp-name">Anita Desai</div>
+            <div class="emp-role">HR Executive</div>
+            <div class="emp-sal">₹55,000/mo</div>
+            <div class="att-row">
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+            </div>
+            <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--grn)"></div></div>
+            <div style="font-size:9px;color:var(--t3);margin-top:4px">21/21 days · Payable ₹55,000</div>
+          </div>
+          <div class="emp-card">
+            <div class="emp-av" style="background:#ff9f43">KP</div>
+            <div class="emp-name">Karan Patel</div>
+            <div class="emp-role">Accountant</div>
+            <div class="emp-sal">₹65,000/mo</div>
+            <div class="att-row">
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--red)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--org)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+              <div class="att-dot" style="background:var(--grn)"></div>
+            </div>
+            <div class="prog-bar"><div class="prog-fill" style="width:76%;background:var(--org)"></div></div>
+            <div style="font-size:9px;color:var(--t3);margin-top:4px">16/21 days · Payable ₹49,524</div>
+          </div>
+        </div>
+        <div class="bottom-card" style="margin-bottom:12px">
+          <div class="card-hdr">ADD EMPLOYEE</div>
+          <div class="form-row cols3">
+            <div class="field"><label>Full Name</label><input placeholder="Employee name…"/></div>
+            <div class="field"><label>Role</label><input placeholder="e.g. Sales Manager"/></div>
+            <div class="field"><label>Department</label><input placeholder="e.g. Operations"/></div>
+            <div class="field"><label>Monthly Salary (₹)</label><input type="number" placeholder="0.00"/></div>
+            <div class="field"><label>Email</label><input placeholder="email@example.com"/></div>
+            <div class="field" style="display:flex;align-items:flex-end"><button class="btn-prim">+ Add Employee</button></div>
+          </div>
+        </div>
+        <div class="bottom-card">
+          <div class="card-hdr">MARK ATTENDANCE</div>
+          <div class="form-row cols3" style="margin-bottom:0">
+            <div class="field"><label>Employee</label><select><option>Priya Sharma</option><option>Rahul Mehta</option><option>Anita Desai</option></select></div>
+            <div class="field"><label>Date</label><input type="date" value="2026-03-26"/></div>
+            <div class="field"><label>Status</label><select><option>Present</option><option>Absent</option><option>Half Day</option><option>On Leave</option></select></div>
+          </div>
+          <button class="btn-sec" style="margin-top:10px">Mark Attendance</button>
+        </div>
+      </div>
+
+      <!-- REPORTS -->
+      <div id="p-reports" class="section">
+        <div class="page-head"><div class="page-title">Reports & Export</div></div>
+        <div class="rpt-btns">
+          <select style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--rs);padding:6px 10px;color:var(--t2);font-size:11px;font-family:var(--font-sans)"><option>All Months</option><option selected>March 2026</option><option>February 2026</option></select>
+          <select style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--rs);padding:6px 10px;color:var(--t2);font-size:11px;font-family:var(--font-sans)"><option selected>2026</option><option>2025</option></select>
+          <button class="btn-grn">⬇ Export Excel</button>
+          <button class="btn-sec">⬇ Backup JSON</button>
+          <button class="btn-sec">⬆ Restore JSON</button>
+        </div>
+        <div class="sum-row">
+          <div class="sum-card"><div class="sum-lbl">Revenue</div><div class="sum-val" style="color:var(--grn)">₹2,08,000</div></div>
+          <div class="sum-card"><div class="sum-lbl">Expenses</div><div class="sum-val" style="color:var(--red)">₹1,28,000</div></div>
+          <div class="sum-card"><div class="sum-lbl">Profit</div><div class="sum-val" style="color:var(--blu)">₹80,000</div></div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-title">REVENUE VS EXPENSES TREND</div>
+            <div class="bar-chart">
+              <div class="bar-grp"><div class="bar rev" style="height:55px"></div><div class="bar exp" style="height:40px"></div></div>
+              <div class="bar-grp"><div class="bar rev" style="height:62px"></div><div class="bar exp" style="height:45px"></div></div>
+              <div class="bar-grp"><div class="bar rev" style="height:48px"></div><div class="bar exp" style="height:38px"></div></div>
+              <div class="bar-grp"><div class="bar rev" style="height:78px"></div><div class="bar exp" style="height:55px"></div></div>
+              <div class="bar-grp"><div class="bar rev" style="height:70px"></div><div class="bar exp" style="height:50px"></div></div>
+              <div class="bar-grp"><div class="bar rev" style="height:90px"></div><div class="bar exp" style="height:65px"></div></div>
+            </div>
+            <div class="x-labels"><span class="x-lbl">Oct</span><span class="x-lbl">Nov</span><span class="x-lbl">Dec</span><span class="x-lbl">Jan</span><span class="x-lbl">Feb</span><span class="x-lbl">Mar</span></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">PAYROLL DISTRIBUTION</div>
+            <div class="donut-wrap">
+              <svg class="donut-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--bg3)" stroke-width="18"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--acc)" stroke-width="18" stroke-dasharray="57 183" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--blu)" stroke-width="18" stroke-dasharray="42 183" stroke-dashoffset="-57" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--grn)" stroke-width="18" stroke-dasharray="36 183" stroke-dashoffset="-99" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--org)" stroke-width="18" stroke-dasharray="49 183" stroke-dashoffset="-135" transform="rotate(-90 50 50)"/>
+              </svg>
+              <div class="donut-legend">
+                <div class="donut-row"><div class="donut-clr" style="background:var(--acc)"></div>Priya – ₹75K</div>
+                <div class="donut-row"><div class="donut-clr" style="background:var(--blu)"></div>Rahul – ₹90K</div>
+                <div class="donut-row"><div class="donut-clr" style="background:var(--grn)"></div>Anita – ₹55K</div>
+                <div class="donut-row"><div class="donut-clr" style="background:var(--org)"></div>Karan – ₹65K</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-card">
+          <div class="card-hdr">FILTERED TRANSACTION LOG</div>
+          <table class="mini-table">
+            <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th></tr></thead>
+            <tbody>
+              <tr><td>25 Mar</td><td>Product Sales</td><td>Sales</td><td><span class="badge bi">Income</span></td><td style="color:var(--grn)">₹1,85,000</td></tr>
+              <tr><td>24 Mar</td><td>Office Rent</td><td>Rent</td><td><span class="badge be">Expense</span></td><td style="color:var(--red)">₹48,000</td></tr>
+              <tr><td>22 Mar</td><td>Marketing</td><td>Marketing</td><td><span class="badge be">Expense</span></td><td style="color:var(--red)">₹32,000</td></tr>
+              <tr><td>21 Mar</td><td>Software License</td><td>Sales</td><td><span class="badge bi">Income</span></td><td style="color:var(--grn)">₹72,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const pages={dashboard:'Dashboard',finance:'Finance',inventory:'Inventory',invoice:'Invoices',employees:'Employees',reports:'Reports'};
+function showPage(id,el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelector('#p-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('pageTitle').textContent=pages[id]||id;
+}
+</script>
